@@ -1,44 +1,33 @@
-document.getElementById('registerForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    const userToken = JSON.parse(localStorage.getItem('token')) || {};
+    const userData = JSON.parse(localStorage.getItem('user')) || {};
     
-    // Verificação de senha
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    
-    if (password !== confirmPassword) {
-        alert('As senhas não coincidem!');
-        return;
+    if (userData.firstName) {
+        document.getElementById('user-name').textContent = `Olá, ${userData.firstName}!`;
+        document.getElementById('user-email').textContent = userData.email;
+    } else {
+        // Redirecionar para a página de login se não houver usuário
+        window.location.href = '../login/login.html';
     }
     
-    // Preparar dados para envio
-    const formData = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        password: password,
-        birthDate: document.getElementById('birthDate').value,
-        phone: document.getElementById('phone').value
-    };
+    // Botão de logout
+    document.getElementById('logout-btn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    });
     
-    try {
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
+    // Toggle do menu lateral (para mobile)
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('active');
+    });
+    
+    // Fechar menu ao clicar em um item (para mobile)
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 992) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
         });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            alert('Cadastro realizado com sucesso!');
-            window.location.href = 'login.html';
-        } else {
-            alert(`Erro: ${data.message || 'Ocorreu um erro no cadastro'}`);
-        }
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro de conexão. Tente novamente mais tarde.');
-    }
+    });
 });

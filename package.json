@@ -15,5 +15,9 @@
     "url": "https://github.com/xToguia/FrontHopiHari/issues"
   },
   "homepage": "https://github.com/xToguia/FrontHopiHari#readme",
+  "dependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "devDependencies": {},
   "description": ""
 }
